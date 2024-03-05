@@ -25,6 +25,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     { 
+        
+        if(Input.GetKeyDown(KeyCode.Space))
+            rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z); 
+            
         if(isDashing)
             return; 
 
@@ -32,8 +36,6 @@ public class PlayerMovement : MonoBehaviour
         movementY = rb.velocity.y; 
         movementZ = Input.GetAxisRaw("Vertical") * movementSpeed;
 
-        if(Input.GetKeyDown(KeyCode.Space))
-            rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z); 
 
         if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
             StartCoroutine(Dash()); 
@@ -52,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
         canDash = false; 
         isDashing = true; 
         rb.useGravity = false; 
-        rb.velocity = new Vector3(0.0f, 0.0f, transform.localScale.z * dashingPower);
+        rb.velocity = new Vector3(0.0f, 0.0f, transform.localScale.z * dashingPower * Mathf.Sign(rb.velocity.z));
         tr.emitting = true; 
         yield return new WaitForSeconds(dashTime); 
         tr.emitting = false; 

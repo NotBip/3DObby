@@ -274,6 +274,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 527011918}
+  tr: {fileID: 527011924}
 --- !u!96 &527011924
 TrailRenderer:
   serializedVersion: 3
@@ -487,7 +488,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 121.53, y: 1.0071547, z: 130.93011}
+  m_LocalScale: {x: 7.06, y: 0.058508288, z: 7.6060777}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
