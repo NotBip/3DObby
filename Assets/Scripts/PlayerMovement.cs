@@ -10,9 +10,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private TrailRenderer tr; 
     [SerializeField] private  LayerMask ground; 
     [SerializeField] private Transform groundCheck; 
-    
+    [SerializeField] private Transform cameraTransform; 
+    [SerializeField] private Transform orientation; 
+    [SerializeField] private Transform playerObj; 
+    [SerializeField] private Transform combatLookAt;
+
     private float movementSpeed = 6f; 
-    private float jumpPower = 5f; 
+    private float jumpPower = 10f; 
     private float movementX = 0f; 
     private float movementY = 0f; 
     private float movementZ = 0f; 
@@ -24,32 +28,45 @@ public class PlayerMovement : MonoBehaviour
     private float dashingPower = 24f; 
     private float dashCooldown = 0.5f; 
 
+    Vector3 moveDirection;
+
+    private void Start()
+    { 
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+    }
 
     private void Update()
-    { 
-        
-        if(Input.GetKeyDown(KeyCode.Space) && isGrounded())
-            rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z); 
-            
-        if(isDashing)
-            return; 
+    {   
 
         movementX = Input.GetAxisRaw("Horizontal") * movementSpeed; 
         movementY = rb.velocity.y; 
         movementZ = Input.GetAxisRaw("Vertical") * movementSpeed;
 
 
-        if(Input.GetKeyDown(KeyCode.LeftShift) && canDash)
-            StartCoroutine(Dash()); 
+        Vector3 dirToCombatLookAt = combatLookAt.position - new Vector3(transform.position.x, combatLookAt.position.y, transform.position.z);
+            orientation.forward = dirToCombatLookAt.normalized;
+            playerObj.forward = dirToCombatLookAt.normalized;
+
+        if(Input.GetKeyDown(KeyCode.Space) && isGrounded())
+            rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z);            
+
+
     }
 
     private void FixedUpdate()  
     { 
-        if(isDashing)
-            return;
-
-        rb.velocity = new Vector3(movementX, movementY, movementZ); 
+        MovePlayer();
     }   
+
+    private void MovePlayer()
+    {
+        moveDirection = combatLookAt.forward * movementZ + combatLookAt.right * movementX;
+        moveDirection = new Vector3(moveDirection.x, 0.0f, moveDirection.z);
+            rb.AddForce(moveDirection.normalized * movementSpeed * 10f, ForceMode.Force);
+
+    
+    }
 
     private IEnumerator Dash()
     { 
