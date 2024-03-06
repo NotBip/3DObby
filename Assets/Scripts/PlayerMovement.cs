@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     
     [SerializeField] private Rigidbody rb; 
     [SerializeField] private TrailRenderer tr; 
+    [SerializeField] private  LayerMask ground; 
+    [SerializeField] private Transform groundCheck; 
     
     private float movementSpeed = 6f; 
     private float jumpPower = 5f; 
@@ -26,7 +28,7 @@ public class PlayerMovement : MonoBehaviour
     private void Update()
     { 
         
-        if(Input.GetKeyDown(KeyCode.Space))
+        if(Input.GetKeyDown(KeyCode.Space) && isGrounded())
             rb.velocity = new Vector3(rb.velocity.x, jumpPower, rb.velocity.z); 
             
         if(isDashing)
@@ -49,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
         rb.velocity = new Vector3(movementX, movementY, movementZ); 
     }   
 
-      private IEnumerator Dash()
+    private IEnumerator Dash()
     { 
         canDash = false; 
         isDashing = true; 
@@ -63,6 +65,11 @@ public class PlayerMovement : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown); 
         canDash = true; 
 
+    }
+
+    private bool isGrounded()
+    { 
+        return Physics.CheckSphere(groundCheck.position, 0.1f, ground); 
     }
 
 }
